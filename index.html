@@ -1,98 +1,118 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<!--
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * -->
 
-.axis--x path {
-  display: none;
-}
+<html>
+	<head>
+		<title>Interactive Line Graph</title>
+		<script src="http://d3js.org/d3.v2.js"></script>
+		<!-- 
+			using JQuery for element dimensions
+			This is a small aspect of this example so it can be removed fairly easily if needed.
+		-->
+		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+		<script src="sample_data.js"></script>
+		<script src="line-graph.js"></script>
+		<link rel="stylesheet" href="style.css" type="text/css">
+		<style>
+			body {
+				font-family: "Helvetica Neue", Helvetica;
+			}
+					
+			p {
+				clear:both;
+				top: 20px;
+			}		
+					
+			div.aGraph {
+				margin-bottom: 30px;
+			}
+		</style>
+	</head>
+	<body>
+	<div id="graph1" class="aGraph" style="position:relative;width:100%;height:400px"></div>
+	
+	<div id="graph2" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
+	<div id="graph3" class="aGraph" style="float:left;position:relative;width:49%;height:200px"></div>
 
-.line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
-}
+	<script>
+		/* 
+		 * If running inside bl.ocks.org we want to resize the iframe to fit both graphs
+		 */
+		 if(parent.document.getElementsByTagName("iframe")[0]) {
+			 parent.document.getElementsByTagName("iframe")[0].setAttribute('style', 'height: 650px !important');
+		 }
+	
+		 /*
+		 * Note how the 'data' object is added to here before rendering to provide decoration information.
+		 * <p>
+		 * This is purposefully done here instead of in data.js as an example of how data would come from a server
+		 * and then have presentation information injected into it (rather than as separate arguments in another object)
+		 * and passed into LineGraph.
+		 *
+		 * Also, CSS can be used to style colors etc, but this is also doable via the 'data' object so that the styling
+		 * of different data points can be done in code which is often more natural for display names, legends, line colors etc
+		 */
+		 // add presentation logic for 'data' object using optional data arguments
+		 data["displayNames"] = ["2xx","3xx","4xx","5xx"];
+		 data["colors"] = ["green","orange","red","darkred"];
+		 data["scale"] = "pow";
+		 
+		 // add presentation logic for 'data' object using optional data arguments
+		 data2["displayNames"] = ["2xx","3xx","4xx","5xx"];
+		 data2["colors"] = ["green","orange","red","darkred"];
+		 data2["scale"] = "linear";
+		 
+		 // add presentation logic for 'data' object using optional data arguments
+		 data3["displayNames"] = ["Data1", "Data2"];
+		 data3["axis"] = ["left", "right"];
+		 data3["colors"] = ["#2863bc","#c8801c"];
+		 data3["rounding"] = [2, 0];
 
-</style>
-<svg width="960" height="500"></svg>
-<script src="//d3js.org/d3.v4.min.js"></script>
-<script>
+		 // create graph now that we've added presentation config
+		var l1 = new LineGraph({containerId: 'graph1', data: data});
+		var l2 = new LineGraph({containerId: 'graph2', data: data2});
+		var l3 = new LineGraph({containerId: 'graph3', data: data3});
+		
+	setInterval(function() {
+		/*
+		* The following will simulate live updating of the data (see dataA, dataB, dataC etc in data.js which are real examples)
+		* This is being simulated so this example functions standalone without a backend server which generates data such as data.js contains.
+		*/
+		// for each data series ...
+		var newData = [];
+		data.values.forEach(function(dataSeries, index) {
+			// take the first value and move it to the end
+			// and capture the value we're moving so we can send it to the graph as an update
+			var v = dataSeries.shift();
+			dataSeries.push(v);
+			// put this value in newData as an array with 1 value
+			newData[index] = [v];
+		})
+		
+		// we will reuse dataA each time
+		dataA.values = newData;
+		// increment time 1 step
+		dataA.start = dataA.start + dataA.step;
+		dataA.end = dataA.end + dataA.step; 
+					
+		l1.slideData(dataA);
+	}, 2000);
 
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 80, bottom: 30, left: 50},
-    width = svg.attr("width") - margin.left - margin.right,
-    height = svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		
+	</script>
 
-var parseTime = d3.timeParse("%Y%m%d");
 
-var x = d3.scaleTime().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
-    z = d3.scaleOrdinal(d3.schemeCategory10);
 
-var line = d3.line()
-    .curve(d3.curveBasis)
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.temperature); });
-
-d3.tsv("data.tsv", type, function(error, data) {
-  if (error) throw error;
-
-  var cities = data.columns.slice(1).map(function(id) {
-    return {
-      id: id,
-      values: data.map(function(d) {
-        return {date: d.date, temperature: d[id]};
-      })
-    };
-  });
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-
-  y.domain([
-    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
-    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
-  ]);
-
-  z.domain(cities.map(function(c) { return c.id; }));
-
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("fill", "#000")
-      .text("Temperature, ºF");
-
-  var city = g.selectAll(".city")
-    .data(cities)
-    .enter().append("g")
-      .attr("class", "city");
-
-  city.append("path")
-      .attr("class", "line")
-      .attr("d", function(d) { return line(d.values); })
-      .style("stroke", function(d) { return z(d.id); });
-
-  city.append("text")
-      .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
-      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
-      .attr("x", 3)
-      .attr("dy", "0.35em")
-      .style("font", "10px sans-serif")
-      .text(function(d) { return d.id; });
-});
-
-function type(d, _, columns) {
-  d.date = parseTime(d.date);
-  for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
-  return d;
-}
-
-</script>
+	</body>
+</html>
