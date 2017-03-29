@@ -8,14 +8,14 @@
 #pieChart {    
 	position:absolute;
 	top:340px;
-	left:1250px;
+	left:1650px;
 	width:300px;
 	height: 300px; 
 }
 
 #barChart {
 	position:absolute;
-	top:500px;
+	top:620px;
 	left:10px;
 	height: 250px;
 }
@@ -335,7 +335,7 @@ function datasetBarChosen(group) {
 function dsBarChartBasics() {
 
 		var margin = {top: 30, right: 5, bottom: 20, left: 50},
-		width = 220 - margin.left - margin.right,
+		width = 180 - margin.left - margin.right,
 	   height = 300 - margin.top - margin.bottom,
 		colorBar = d3.scale.category20(),
 		barPadding = 1
@@ -560,7 +560,7 @@ function updateBarChart(group, colorChosen) {
 */
 var margin = {top: 20, right: 200, bottom: 100, left: 50},
     margin2 = { top: 430, right: 10, bottom: 20, left: 40},
-    width = 1260 - margin.left - margin.right,
+    width = 1560 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
     height2 = 470 - margin2.top - margin2.bottom;
 
