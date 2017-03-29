@@ -335,8 +335,8 @@ function datasetBarChosen(group) {
 function dsBarChartBasics() {
 
 		var margin = {top: 30, right: 5, bottom: 20, left: 50},
-		width = 250 - margin.left - margin.right,
-	   height = 250 - margin.top - margin.bottom,
+		width = 220 - margin.left - margin.right,
+	   height = 300 - margin.top - margin.bottom,
 		colorBar = d3.scale.category20(),
 		barPadding = 1
 		;
@@ -709,7 +709,7 @@ d3.tsv("data.tsv", function(error, data) {
       .attr("x", -10)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Issues Rating");
+      .text("Tourist Count");
 
   var issue = svg.selectAll(".issue")
       .data(categories) // Select nested data and append to new svg group elements
