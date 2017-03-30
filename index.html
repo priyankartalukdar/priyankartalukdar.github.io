@@ -7,7 +7,7 @@
 
 #pieChart {    
 	position:absolute;
-	top:300px;
+	top:270px;
 	left:1620px;
 	width:300px;
 	height: 300px; 
@@ -21,7 +21,7 @@
 }
 
 .slice {
-   font-size: 8pt;
+   font-size: 10pt;
    font-family: Verdana;
    fill: white; //svg specific - instead of color
    font-weight: bold;	
@@ -30,32 +30,33 @@
 
 .axis text {
     font-family: Verdana;
-    font-size: 8px;
+    font-size: 10px;
 }
 
 .title {
 	 font-family: Verdana;
-    font-size: 8px;	
+   font-size: 14px;	
+   font-weight: bold;	
 		
 }
 
 .xAxis {
     font-family: verdana;
-    font-size: 8px;
+    font-size: 10px;
     fill: black;
 }  
 
 .yAxis {
     font-family: verdana;
-    font-size: 8px;
-    fill: white;
+    font-size: 11px;
+    fill: black;
 }
 
 
 
 
 body {
-  font: 8px sans-serif;
+  font: 12px sans-serif;
 }
 
 .axis path,
@@ -159,8 +160,8 @@ function dsPieChart(){
 	      ]
 	      ;
 
-	var 	width = 180,
-		   height = 180,
+	var  width = 200,
+		   height = 200,
 		   outerRadius = Math.min(width, height) / 2,
 		   innerRadius = outerRadius * .999,   
 		   // for animation
@@ -183,7 +184,7 @@ function dsPieChart(){
    
    // for animation
    var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
-	var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
+	 var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
 
    var pie = d3.layout.pie()           //this will create arc data for us given a list of values
         .value(function(d) { return d.measure; });    //we must tell it out to access the value of each element in our data array
@@ -335,8 +336,8 @@ function datasetBarChosen(group) {
 function dsBarChartBasics() {
 
 		var margin = {top: 30, right: 5, bottom: 20, left: 50},
-		width = 180 - margin.left - margin.right,
-	   height = 300 - margin.top - margin.bottom,
+		width = 270 - margin.left - margin.right,
+	  height = 300 - margin.top - margin.bottom,
 		colorBar = d3.scale.category20(),
 		barPadding = 1
 		;
@@ -440,7 +441,6 @@ function dsBarChart() {
 	;
 	
 	// Add x labels to chart	
-	
 	var xLabels = svg
 		    .append("g")
 		    .attr("transform", "translate(" + margin.left + "," + (margin.top + height)  + ")")
@@ -454,11 +454,13 @@ function dsBarChart() {
 		  .attr("text-anchor", "middle")
 			// Set x position to the left edge of each bar plus half the bar width
 						   .attr("x", function(d, i) {
-						   		return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding) / 2);
+						   		return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding)/2);
 						   })
-		  .attr("y", 15)
+		  .attr("y", 10)
 		  .attr("class", "xAxis")
 		  //.attr("style", "font-size: 12; font-family: Helvetica, sans-serif")
+      //  .attr("transform", "rotate(-65)");
+
 		  ;			
 	 
 	// Title
