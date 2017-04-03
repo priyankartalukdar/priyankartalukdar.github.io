@@ -7,7 +7,7 @@
 
 #pieChart {    
 	position:absolute;
-	top:270px;
+	top:500px;
 	left:1620px;
 	width:300px;
 	height: 300px; 
@@ -15,7 +15,7 @@
 
 #barChart {
 	position:absolute;
-	top:620px;
+	top:790px;
 	left:10px;
 	height: 250px;
 }
@@ -30,7 +30,7 @@
 
 .axis text {
     font-family: Verdana;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .title {
@@ -42,13 +42,13 @@
 
 .xAxis {
     font-family: verdana;
-    font-size: 10px;
+    font-size: 12px;
     fill: black;
 }  
 
 .yAxis {
     font-family: verdana;
-    font-size: 11px;
+    font-size: 12px;
     fill: black;
 }
 
@@ -56,7 +56,7 @@
 
 
 body {
-  font: 12px sans-serif;
+  font: 11px sans-serif;
 }
 
 .axis path,
@@ -336,10 +336,10 @@ function datasetBarChosen(group) {
 function dsBarChartBasics() {
 
 		var margin = {top: 30, right: 5, bottom: 20, left: 50},
-		width = 270 - margin.left - margin.right,
+		width = 450 - margin.left - margin.right,
 	  height = 300 - margin.top - margin.bottom,
 		colorBar = d3.scale.category20(),
-		barPadding = 1
+		barPadding = 10
 		;
 		
 		return {
@@ -439,7 +439,7 @@ function dsBarChart() {
 	.attr("fill", "white")
 	*/
 	;
-	
+
 	// Add x labels to chart	
 	var xLabels = svg
 		    .append("g")
@@ -460,7 +460,6 @@ function dsBarChart() {
 		  .attr("class", "xAxis")
 		  //.attr("style", "font-size: 12; font-family: Helvetica, sans-serif")
       //  .attr("transform", "rotate(-65)");
-
 		  ;			
 	 
 	// Title
@@ -560,13 +559,13 @@ function updateBarChart(group, colorChosen) {
 /*
 ####################################################################################################################################################################################
 */
-var margin = {top: 20, right: 200, bottom: 100, left: 50},
-    margin2 = { top: 430, right: 10, bottom: 20, left: 40},
-    width = 1560 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom,
-    height2 = 470 - margin2.top - margin2.bottom;
+var margin = {top: 20, right: 250, bottom: 100, left: 70},
+    margin2 = { top: 310, right: 15, bottom: 20, left: 40},
+    width = 1650 - margin.left - margin.right,
+    height = 720 - margin.top - margin.bottom,
+    height2 = 590 - margin2.top - margin2.bottom;
 
-var parseDate = d3.time.format("%Y%m%d").parse;
+var parseDate = d3.time.format("%Y-%m-%d").parse;
 var bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
 var xScale = d3.time.scale()
@@ -620,7 +619,7 @@ svg.append("rect")
 //for slider part-----------------------------------------------------------------------------------
   
 var context = svg.append("g") // Brushing context box container
-    .attr("transform", "translate(" + 0 + "," + 410 + ")")
+    .attr("transform", "translate(" + 0 + "," + 650 + ")")
     .attr("class", "context");
 
 //append clip path for lines plotted, hiding those part out of bounds
@@ -731,7 +730,7 @@ d3.tsv("data.tsv", function(error, data) {
       .style("stroke", function(d) { return color(d.name); });
 
   // draw legend
-  var legendSpace = 450 / categories.length; // 450/number of issues (ex. 40)    
+  var legendSpace = 650 / categories.length; // 450/number of issues (ex. 40)    
 
   issue.append("rect")
       .attr("width", 10)
